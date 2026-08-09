@@ -1113,14 +1113,6 @@ Wood–leaf prediction on structurally complex tropical trees not used during tr
 
 Reference labels and Point Transformer predictions for complex plot-level forest scenes.
 
-## Wytham leaf-off TLS
-
-<p align="center">
-<img src="docs/images/Wytham.png" width="96%" alt="Wytham leaf-off TLS">
-</p>
-
-Leaf-off TLS examples showing recovery of fine woody architecture.
-
 ## Large registered TLS plot
 
 <p align="center">
