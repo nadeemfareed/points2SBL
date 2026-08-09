@@ -57,7 +57,12 @@ Most users only need to install points2SBL, place the released Point Transformer
 
 ```powershell
 git clone https://github.com/nadeemfareed/points2SBL.git
+
 cd points2SBL
+
+conda create -n points2sbl python=3.11 -y
+
+conda activate points2sbl
 ```
 
 ## 2. Create a clean Python environment
