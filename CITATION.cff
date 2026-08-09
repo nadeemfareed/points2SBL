@@ -8,9 +8,11 @@ authors:
     given-names: "Nadeem"
 repository-code: "https://github.com/nadeemfareed/points2sbl"
 url: "https://github.com/nadeemfareed/points2sbl"
-license: MIT
+license: GPL-3.0 license
 keywords:
   - LiDAR
   - forest point clouds
   - semantic segmentation
   - wood-leaf segmentation
+  - deep learning
+  - TLS
