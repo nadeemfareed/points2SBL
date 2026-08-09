@@ -1137,14 +1137,6 @@ Large-scale registered TLS prediction processed through block-wise multi-vote in
 
 Prediction on lower-density ULS data.
 
-## Probability and label disagreement
-
-<p align="center">
-<img src="docs/images/probablities_disagreement_between_labels_and%20probablities.png" width="96%" alt="Probability disagreement">
-</p>
-
-Leaf-probability maps expose areas where binary labels and model confidence disagree.
-
 ## BlueCat qualitative result
 
 <p align="center">
