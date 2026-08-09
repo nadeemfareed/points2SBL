@@ -1116,7 +1116,7 @@ Reference labels and Point Transformer predictions for complex plot-level forest
 ## Wytham leaf-off TLS
 
 <p align="center">
-<img src="docs/images/Wytham%20.png" width="96%" alt="Wytham leaf-off TLS">
+<img src="docs/images/Wytham.png" width="96%" alt="Wytham leaf-off TLS">
 </p>
 
 Leaf-off TLS examples showing recovery of fine woody architecture.
