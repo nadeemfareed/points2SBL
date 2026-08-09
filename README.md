@@ -178,15 +178,15 @@ Validated environment:
 - PyTorch CUDA
 
 Installation:
-
+```
 !pip install points2sbl
-
+```powershell
 Download model:
-
+```
 !points2sbl model download
-
+```powershell
 Inference:
-
+```
 !points2sbl predict \
     --input_type auto \
     --mode full \
@@ -194,7 +194,7 @@ Inference:
     --in_las input.las \
     --out_las output.las \
     --device cuda
-
+```powershell
 ## Quick inference example
 
 ```powershell
