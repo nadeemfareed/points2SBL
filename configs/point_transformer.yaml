@@ -1,0 +1,218 @@
+data:
+  train_dir: train
+  val_dir: val
+  test_dir: test
+  label_field: Classification
+  labels:
+    non_leaf: 0
+    leaf: 1
+  output_remap: null
+  block:
+    n_points: 8192
+    radius: 0.75
+    min_points: 64
+features:
+  use_xyz: true
+  use_centered_xyz: true
+  include_geom_features: true
+  geom_k:
+  - 12
+  - 24
+  geom_k_infer: 12
+  geom_select:
+  - linearity
+  - planarity
+  - scattering
+  - curvature
+  use_normals: false
+  normal_k: 24
+  use_eigen: false
+  eigen_k: 24
+  normalize_features: true
+  standardize_features: true
+  clip_features: 5.0
+  log_omnivariance: false
+train:
+  seed: 42
+  epochs: 40
+  batch_size: 8
+  lr: 0.0001
+  weight_decay: 0.01
+  grad_clip: 1.0
+  num_workers: 0
+  device: cuda
+  mixed_precision: false
+  progress: compact
+  progress_every: 50
+  max_steps_per_epoch: null
+  val_every: 2
+  val_max_steps: null
+  scheduler:
+    name: one_cycle
+    max_lr: 0.0003
+    pct_start: 0.1
+    div_factor: 10.0
+    final_div_factor: 200.0
+  loss:
+    ce_w: 1.0
+    dice_w: 0.2
+    focal_w: 0.0
+    focal_gamma: 2.0
+    label_smoothing: 0.0
+    ignore_index: -1
+    ce_class_weights:
+    - 3.0
+    - 1.0
+  ssl_ckpt: null
+predict:
+  profiles:
+    raw:
+      tile_size_m: 1.5
+      n_points: 8192
+      min_points: 64
+      votes: 1
+      vote_mode: grid4
+      vote_weight: uniform
+      batch_blocks: 16
+      seed: 42
+      thr: 0.5
+      geom_cache: all
+      exclude_ground_class: true
+      ground_class_code: 2
+      ground_prob_fill: -1.0
+      overwrite_classification: true
+      save_pred_class_dim: true
+      save_pred_prob_dim: true
+      progress: tiles
+    full:
+      tile_size_m: 1.5
+      n_points: 8192
+      min_points: 64
+      votes: 6
+      vote_mode: grid4
+      vote_weight: confidence
+      batch_blocks: 16
+      seed: 42
+      geom_cache: all
+      spatial_vote: true
+      spatial_sigma_frac: 0.35
+      spatial_min: 0.2
+      smooth: true
+      smooth_k: 24
+      smooth_tau: 0.62
+      smooth_margin: 0.08
+      smooth_passes: 1
+      adaptive_tile_checks: true
+      occupancy_grid_n: 4
+      min_occupancy_frac: 0.2
+      max_dominant_cell_frac: 0.7
+      min_xy_spread_frac: 0.2
+      t_low: 0.35
+      t_high: 0.8
+      geom_rescue_thr: 0.58
+      local_woody_thr: 0.48
+      local_leaf_thr: 0.62
+      midband_knn_k: 16
+      vote_var_thr: 0.02
+      vote_count_low: 2.0
+      exclude_ground_class: true
+      ground_class_code: 2
+      ground_prob_fill: -1.0
+      denoise: true
+      denoise_preserve_ground: true
+      rad_sor_k: 40
+      rad_sor_nsigma: 0.8
+      xyz_sor_k: 3
+      xyz_sor_nsigma: 1.0
+      post_refine_woody: true
+      woody_refine_k: 16
+      woody_refine_min_support: 0.28
+      woody_refine_keep_if_p_leaf_le: 0.15
+      woody_refine_flip_only_if_p_leaf_ge: 0.2
+      post_refine_woody_structure: true
+      woody_structure_k: 16
+      woody_core_p_leaf_max: 0.18
+      woody_core_min_local_support: 0.55
+      woody_core_min_geom_support: 0.52
+      woody_core_max_vote_var: 0.03
+      woody_core_min_vote_count: 2.0
+      woody_structure_min_core_neighbor_frac: 0.2
+      woody_structure_weak_p_leaf_ge: 0.24
+      woody_structure_keep_if_geom_ge: 0.68
+      woody_structure_keep_if_local_ge: 0.72
+      cleanup_small_woody_components: true
+      woody_component_radius: 0.12
+      woody_component_min_size: 24
+      woody_component_keep_if_core_frac_ge: 0.2
+      woody_component_keep_if_mean_p_leaf_le: 0.18
+      woody_component_max_candidates: 1000000
+      reassign_uncertain: true
+      uncertain_reassign_k: 8
+      uncertain_reassign_woody_neighbor_frac: 0.7
+      uncertain_reassign_leaf_neighbor_frac: 0.55
+      uncertain_reassign_woody_p_leaf_max: 0.28
+      overwrite_classification: true
+      save_pred_class_dim: true
+      save_pred_prob_dim: true
+      progress: tiles
+    adaptive:
+      tile_size_m: 1.5
+      n_points: 8192
+      min_points: 64
+      votes: 8
+      vote_mode: hybrid8
+      vote_weight: confidence
+      batch_blocks: 16
+      seed: 42
+      geom_cache: all
+      spatial_vote: true
+      spatial_sigma_frac: 0.35
+      spatial_min: 0.2
+      adaptive_tile_checks: true
+      occupancy_grid_n: 4
+      min_occupancy_frac: 0.2
+      max_dominant_cell_frac: 0.7
+      min_xy_spread_frac: 0.2
+      exclude_ground_class: true
+      ground_class_code: 2
+      ground_prob_fill: -1.0
+      overwrite_classification: true
+      save_pred_class_dim: true
+      save_pred_prob_dim: true
+      midband_knn_k: 16
+      adaptive:
+        hist_bins: 256
+        hist_smooth_sigma: 2.0
+        shoulder_fraction: 0.02
+        min_transition_width: 0.1
+        geom_ratio: 0.85
+        local_support_min: 0.55
+        write_distribution: true
+      progress: tiles
+model:
+  name: point_transformer
+  num_classes: 2
+  in_dim: 7
+  dim: 128
+  depth: 6
+  knn_k: 24
+  dropout: 0.1
+prep:
+  val_ratio: 0.2
+  test_ratio: 0.0
+  xy_size:
+  - 2.0
+  - 2.0
+  stride:
+  - 1.0
+  - 1.0
+  use_overlap_in_val: false
+  rotate_train: true
+  leaf_frac_min: 0.0
+  anchor_merge:
+    enable: true
+    anchor_class: 0
+    anchor_min_points: 40
+    anchor_seed_points: 64
+    anchor_knn: 48
+    anchor_blocks_per_tile: 1

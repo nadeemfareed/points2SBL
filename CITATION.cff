@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use points2SBL in research, please cite the software and the associated article."
+title: "points2SBL"
+type: software
+version: 0.3.0
+authors:
+  - family-names: "Fareed"
+    given-names: "Nadeem"
+repository-code: "https://github.com/nadeemfareed/points2sbl"
+url: "https://github.com/nadeemfareed/points2sbl"
+license: MIT
+keywords:
+  - LiDAR
+  - forest point clouds
+  - semantic segmentation
+  - wood-leaf segmentation

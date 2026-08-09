@@ -1,0 +1,8 @@
+numpy>=1.23,<3
+scipy>=1.10,<2
+laspy>=2.5
+lazrs>=0.6
+torch>=2.0
+pyyaml>=6.0
+tqdm>=4.65
+joblib>=1.3

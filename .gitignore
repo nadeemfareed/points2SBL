@@ -1,0 +1,61 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# Build / packaging
+build/
+dist/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+.conda/
+.env
+.env.*
+.ipynb_checkpoints/
+
+# Training / checkpoints / local model artifacts
+runs/*
+!runs/README.md
+!runs/point_transformer_curated_20260327_170108/
+runs/point_transformer_curated_20260327_170108/*
+!runs/point_transformer_curated_20260327_170108/.gitkeep
+data/
+logs/
+outputs/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# Point clouds / prepared arrays
+*.las
+*.laz
+*.npz
+*.npy
+*.ply
+*.pcd
+
+# Inference outputs
+*_infer.json
+*_pred_leaf_prob_distribution.csv
+*_pred_leaf_prob_distribution.svg
+
+# Secrets / publishing credentials
+*.key
+*.pem
+.pypirc
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+

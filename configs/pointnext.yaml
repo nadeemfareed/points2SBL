@@ -1,0 +1,113 @@
+data:
+  train_dir: train
+  val_dir: val
+  test_dir: test
+  label_field: Classification
+  labels:
+    non_leaf: 0
+    leaf: 1
+  output_remap: null
+  block:
+    n_points: 8192
+    radius: 0.75
+    min_points: 64
+
+features:
+  use_xyz: true
+  use_centered_xyz: true
+  include_geom_features: true
+  geom_k:
+    - 12
+    - 24
+  geom_k_infer: 12
+  geom_select:
+    - linearity
+    - planarity
+    - scattering
+    - curvature
+  use_normals: false
+  normal_k: 24
+  use_eigen: false
+  eigen_k: 24
+  normalize_features: true
+  standardize_features: true
+  clip_features: 5.0
+  log_omnivariance: false
+
+train:
+  seed: 42
+  epochs: 40
+  batch_size: 8
+  lr: 0.0001
+  weight_decay: 0.01
+  grad_clip: 1.0
+  num_workers: 0
+  device: cuda
+  mixed_precision: false
+  progress: compact
+  progress_every: 50
+  max_steps_per_epoch: null
+  val_every: 2
+  val_max_steps: null
+  scheduler:
+    name: one_cycle
+    max_lr: 0.0003
+    pct_start: 0.1
+    div_factor: 10.0
+    final_div_factor: 200.0
+  loss:
+    ce_w: 1.0
+    dice_w: 0.2
+    focal_w: 0.0
+    focal_gamma: 2.0
+    label_smoothing: 0.0
+    ignore_index: -1
+    ce_class_weights:
+      - 3.0
+      - 1.0
+  ssl_ckpt: null
+
+predict:
+  block_n_points: 200000
+  vote_k: 0
+
+model:
+  name: pointnext
+  num_classes: 2
+  in_dim: 7
+  sa1_npoint: 2048
+  sa1_k: 32
+  sa2_npoint: 512
+  sa2_k: 32
+  sa3_npoint: 128
+  sa3_k: 32
+  width1: 64
+  width2: 128
+  width3: 256
+  dropout: 0.2
+  feat_dropout: 0.0
+
+prep:
+  val_ratio: 0.20
+  test_ratio: 0.00
+
+  xy_size:
+    - 2.0
+    - 2.0
+
+  stride:
+    - 1.0
+    - 1.0
+
+  use_overlap_in_val: false
+
+  rotate_train: true
+  leaf_frac_min: 0.0
+
+  anchor_merge:
+    enable: true
+    anchor_class: 0
+    anchor_min_points: 40
+    anchor_seed_points: 64
+    anchor_knn: 48
+    anchor_blocks_per_tile: 1
