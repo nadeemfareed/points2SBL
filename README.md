@@ -51,34 +51,19 @@ The recommended production model is the **Point Transformer**. PointNeXt and Poi
 
 # Installation
 
-Most users only need to install points2SBL, place the released Point Transformer checkpoint in the expected `runs/` folder, and start inference.
+points2SBL supports both local installation from GitHub and direct installation from PyPI. The recommended workflow is to install the appropriate PyTorch build first and then install points2SBL.
 
-## 1. Clone the repository
+## Option 1: Install from PyPI (recommended)
+
+Create and activate a clean environment:
 
 ```powershell
-git clone https://github.com/nadeemfareed/points2SBL.git
-
-cd points2SBL
-
 conda create -n points2sbl python=3.11 -y
 
 conda activate points2sbl
 ```
 
-## 2. Create a clean Python environment
-
-Python 3.11 is recommended for the validated Windows/CUDA workflow.
-
-```powershell
-conda create -n points2sbl python=3.11 -y
-conda activate points2sbl
-```
-
-## 3. Install PyTorch
-
-### CUDA example
-
-The validated development configuration uses PyTorch 2.5.1 with CUDA 12.1.
+Install the validated CUDA build of PyTorch:
 
 ```powershell
 python -m pip install `
@@ -88,43 +73,19 @@ python -m pip install `
   --index-url https://download.pytorch.org/whl/cu121
 ```
 
-Verify CUDA before installing points2SBL:
+Install points2SBL:
 
 ```powershell
-python -c "import torch; print('Torch:', torch.__version__); print('CUDA build:', torch.version.cuda); print('CUDA available:', torch.cuda.is_available()); print('GPU:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NONE')"
+pip install points2sbl
 ```
 
-### CPU-only example
+Download the pretrained model:
 
 ```powershell
-python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+points2sbl model download
 ```
 
-CPU inference is supported but can be substantially slower for large forest point clouds.
-
-## 4. Install points2SBL
-
-For a local Git clone:
-
-```powershell
-python -m pip install -e . --no-deps
-```
-
-Using `--no-deps` is recommended after installing the desired PyTorch build so that `pip` does not replace a working CUDA-enabled PyTorch installation.
-
-## 5. Verify the installation
-
-```powershell
-python -c "import points2sbl; print('points2SBL import successful')"
-points2sbl validate-config --config ".\configs\point_transformer.yaml"
-points2sbl predict --help
-```
-
----
-
-# Pretrained model
-
-Place the released Point Transformer checkpoint at:
+The model will be automatically placed in:
 
 ```text
 runs/
@@ -132,16 +93,99 @@ runs/
     └── best.pt
 ```
 
-The standard checkpoint path used throughout this README is:
+---
 
-```text
-runs\point_transformer_curated_20260327_170108\best.pt
+## Option 2: Install from GitHub
+
+Clone the repository:
+
+```powershell
+git clone https://github.com/nadeemfareed/points2SBL.git
+
+cd points2SBL
 ```
 
-The checkpoint contains the model configuration used for training. During inference, points2SBL uses the configuration embedded in the checkpoint when available to avoid feature/model mismatches.
+Create and activate a clean environment:
+
+```powershell
+conda create -n points2sbl python=3.11 -y
+
+conda activate points2sbl
+```
+
+Install the validated CUDA build of PyTorch:
+
+```powershell
+python -m pip install `
+  torch==2.5.1 `
+  torchvision==0.20.1 `
+  torchaudio==2.5.1 `
+  --index-url https://download.pytorch.org/whl/cu121
+```
+
+Install points2SBL:
+
+```powershell
+python -m pip install -e .
+```
+
+Download the pretrained model:
+
+```powershell
+points2sbl model download
+```
 
 ---
 
+## Google Colab and cloud notebooks
+
+Install the CUDA-enabled PyTorch build provided by the notebook environment and then install points2SBL:
+
+```python
+!pip install points2sbl
+
+!points2sbl model download
+```
+
+The pretrained model will be downloaded automatically into:
+
+```text
+runs/
+└── point_transformer_curated_20260327_170108/
+    └── best.pt
+```
+
+---
+
+## Verify the installation
+
+```powershell
+python -c "import points2sbl; print('points2SBL import successful')"
+
+points2sbl --help
+
+points2sbl model status
+```
+
+---
+
+# Pretrained model
+
+The released Point Transformer checkpoint is distributed separately from the source code and can be downloaded automatically using:
+
+```powershell
+points2sbl model download
+```
+
+The standard checkpoint location used throughout this README is:
+
+```text
+runs/
+└── point_transformer_curated_20260327_170108/
+    └── best.pt
+```
+
+The checkpoint contains the model configuration used during training. During inference, points2SBL uses the configuration embedded in the checkpoint when available to avoid feature and model mismatches.
 # Quick start
 
 For most users, these are the only concepts required:
