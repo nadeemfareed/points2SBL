@@ -167,22 +167,33 @@ runs/
 
 ---
 
-## Google Colab and cloud notebooks
+### Google Colab support (validated)
 
-### Google Colab (validated)
+Validated environment:
 
-```python
+- Google Colab
+- Python 3.12
+- Linux
+- Tesla T4 GPU
+- PyTorch CUDA
+
+Installation:
+
 !pip install points2sbl
 
+Download model:
+
 !points2sbl model download
-```
 
-Validated on:
+Inference:
 
-- Python 3.12
-- Linux (Google Colab)
-- CPU runtime
----
+!points2sbl predict \
+    --input_type auto \
+    --mode full \
+    --config points2SBL/configs/point_transformer.yaml \
+    --in_las input.las \
+    --out_las output.las \
+    --device cuda
 
 ## Quick inference example
 
