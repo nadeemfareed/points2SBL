@@ -1,3 +1,4 @@
+from .model_manager import download_model
 from __future__ import annotations
 
 import argparse
