@@ -1341,37 +1341,6 @@ runs/<run_name>/
 Use `best.pt` for production inference unless a specific experiment requires another checkpoint.
 
 ---
-
-# Repository layout
-
-```text
-points2SBL/
-├── .github/
-├── configs/
-│   ├── point_transformer.yaml
-│   ├── pointnet2.yaml
-│   └── pointnext.yaml
-├── docs/
-│   └── images/
-├── examples/
-├── packaging/
-├── runs/
-│   ├── README.md
-│   └── point_transformer_curated_20260327_170108/
-├── src/
-│   └── points2sbl/
-├── tests/
-├── tools/
-├── CHANGELOG.md
-├── CITATION.cff
-├── CONTRIBUTING.md
-├── environment.yml
-├── LICENSE
-├── pyproject.toml
-├── README.md
-├── requirements-dev.txt
-├── requirements.txt
-└── SECURITY.md
 ```
 
 Generated caches, build directories, local checkpoints, temporary patches, and prediction outputs should not be committed to Git.
@@ -1406,6 +1375,7 @@ points2SBL is released under the GNU General Public License v3.0 (GPL-3.0). See 
 School of Forest, Fisheries, and Geomatics Sciences  
 University of Florida  
 nadeem@geomatics.ncku.edu.tw
+fareed.nadeem@ufl.edu
 
 GitHub: [nadeemfareed](https://github.com/nadeemfareed)
 
