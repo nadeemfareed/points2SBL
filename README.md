@@ -532,6 +532,15 @@ points2sbl predict `
 ```
 
 Use this when class `2` represents ground. Ground points are retained in the output and excluded from wood–leaf prediction.
+## fastgc - https://github.com/nadeemfareed/FAST-GC
+The best practice is to process the point clouds for ground classification using fastgc and then use the points2sbl with ground class available to reduce the processing time and accuracy (ground points do not belong to wood and foliage)
+
+pip install fastgc
+
+### Install from source
+git clone https://github.com/nadeemfareed/FAST-GC.git
+cd FAST-GC
+pip install -e .
 
 ## Example 2 — Plot, raw model output
 
