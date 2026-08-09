@@ -1,6 +1,5 @@
-from .model_manager import download_model
 from __future__ import annotations
-
+from .model_manager import download_model
 import argparse
 import os
 import sys
