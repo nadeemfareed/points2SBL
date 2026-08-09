@@ -53,7 +53,9 @@ The recommended production model is the **Point Transformer**. PointNeXt and Poi
 
 points2SBL supports both local installation from GitHub and direct installation from PyPI. The recommended workflow is to install the appropriate PyTorch build first and then install points2SBL.
 
-## Option 1: Install from PyPI (recommended)
+---
+
+## Option 1: Install from PyPI
 
 Create and activate a clean environment:
 
@@ -79,23 +81,29 @@ Install points2SBL:
 pip install points2sbl
 ```
 
+Verify the installation:
+
+```powershell
+python -c "import points2sbl; print('points2SBL import successful')"
+
+points2sbl --help
+```
+
 Download the pretrained model:
 
 ```powershell
 points2sbl model download
 ```
 
-The model will be automatically placed in:
+Verify that the model is available:
 
-```text
-runs/
-└── point_transformer_curated_20260327_170108/
-    └── best.pt
+```powershell
+points2sbl model status
 ```
 
 ---
 
-## Option 2: Install from GitHub
+## Option 2: Install from GitHub (validated)
 
 Clone the repository:
 
@@ -129,30 +137,60 @@ Install points2SBL:
 python -m pip install -e .
 ```
 
+Verify the installation:
+
+```powershell
+python -c "import points2sbl; print('points2SBL import successful')"
+
+points2sbl --help
+```
+
 Download the pretrained model:
 
 ```powershell
 points2sbl model download
 ```
 
----
+Verify that the model is available:
 
-## Google Colab and cloud notebooks
-
-Install the CUDA-enabled PyTorch build provided by the notebook environment and then install points2SBL:
-
-```python
-!pip install points2sbl
-
-!points2sbl model download
+```powershell
+points2sbl model status
 ```
 
-The pretrained model will be downloaded automatically into:
+The pretrained model will be placed in:
 
 ```text
 runs/
 └── point_transformer_curated_20260327_170108/
     └── best.pt
+```
+
+---
+
+## Google Colab and cloud notebooks
+
+Install points2SBL:
+
+```python
+!pip install points2sbl
+
+!points2sbl model download
+
+!points2sbl model status
+```
+
+---
+
+## Quick inference example
+
+```powershell
+points2sbl predict `
+  --input_type auto `
+  --mode full `
+  --config ".\configs\point_transformer.yaml" `
+  --in_las "input.las" `
+  --out_las "output.las" `
+  --device cuda
 ```
 
 ---
@@ -186,6 +224,52 @@ runs/
 ```
 
 The checkpoint contains the model configuration used during training. During inference, points2SBL uses the configuration embedded in the checkpoint when available to avoid feature and model mismatches.
+
+---
+
+# Validated environment
+
+| Component | Version |
+|---|---:|
+| Operating system | Windows 11 |
+| Python | 3.11 |
+| PyTorch | 2.5.1 |
+| CUDA | 12.1 |
+| NumPy | 2.4.4 |
+| SciPy | 1.17.1 |
+| GPU | NVIDIA GeForce RTX 3070 Ti |
+
+---
+
+# Troubleshooting
+
+### Verify installation
+
+```powershell
+points2sbl --help
+
+points2sbl model status
+```
+
+### Download the pretrained model again
+
+```powershell
+points2sbl model download --force
+```
+
+### PowerShell multiline commands
+
+Every line except the last must end with:
+
+```text
+`
+```
+
+### Checkpoint not found
+
+```powershell
+points2sbl model download
+```
 # Quick start
 
 For most users, these are the only concepts required:
