@@ -21,14 +21,25 @@ MODEL_SHA256 = "fd43c5f83463f00d189292b4d4034bec21f3147c453232c4fbf8336cfd2047f9
 MODEL_BYTES = 18383398
 
 
+
+def repo_root() -> Path:
+    cwd = Path.cwd()
+    for p in [cwd] + list(cwd.parents):
+        if (p / "pyproject.toml").exists():
+            return p
+    return cwd
+
+
 def model_cache_dir() -> Path:
-    if os.name == "nt" and os.environ.get("LOCALAPPDATA"):
-        return Path(os.environ["LOCALAPPDATA"]) / "points2sbl" / "models"
-    return Path.home() / ".cache" / "points2sbl" / "models"
+    return (
+        repo_root()
+        / "runs"
+        / "point_transformer_curated_20260327_170108"
+    )
 
 
 def default_model_path() -> Path:
-    return model_cache_dir() / MODEL_FILENAME
+    return model_cache_dir() / "best.pt"
 
 
 def sha256_file(path: Path, chunk_size: int = 8 * 1024 * 1024) -> str:
