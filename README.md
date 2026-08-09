@@ -169,16 +169,19 @@ runs/
 
 ## Google Colab and cloud notebooks
 
-Install points2SBL:
+### Google Colab (validated)
 
 ```python
 !pip install points2sbl
 
 !points2sbl model download
-
-!points2sbl model status
 ```
 
+Validated on:
+
+- Python 3.12
+- Linux (Google Colab)
+- CPU runtime
 ---
 
 ## Quick inference example
