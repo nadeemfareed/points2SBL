@@ -8,7 +8,7 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.x-ee4c2c.svg)
 ![CUDA](https://img.shields.io/badge/CUDA-Supported-76B900.svg)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+![License](https://img.shields.io/badge/GPL-3.0 license-green.svg)
 ![Paper](https://img.shields.io/badge/Paper-Under%20Review-blue.svg)
 
 </div>
