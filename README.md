@@ -353,7 +353,7 @@ Use `plot` for multi-tree forest scenes where class `2` represents ground.
 Plot behavior:
 
 - class `2` ground is preserved;
-- ground is excluded from wood–leaf prediction;
+- ground is excluded from wood–leaf prediction; ( use fastgc https://github.com/nadeemfareed/FAST-GC to classify ground points before points2sbl deep learning" - fastgc is another package developed by author.
 - the established plot denoising workflow is enabled by default;
 - non-ground points are classified as wood or leaf.
 
