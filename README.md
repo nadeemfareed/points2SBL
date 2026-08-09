@@ -221,13 +221,6 @@ points2sbl model status
 
 ---
 
-# Pretrained model
-
-The released Point Transformer checkpoint is distributed separately from the source code and can be downloaded automatically using:
-
-```powershell
-points2sbl model download
-```
 
 The standard checkpoint location used throughout this README is:
 
@@ -269,20 +262,6 @@ points2sbl model status
 
 ```powershell
 points2sbl model download --force
-```
-
-### PowerShell multiline commands
-
-Every line except the last must end with:
-
-```text
-`
-```
-
-### Checkpoint not found
-
-```powershell
-points2sbl model download
 ```
 # Quick start
 
