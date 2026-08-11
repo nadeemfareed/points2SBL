@@ -277,36 +277,55 @@ The recommended general-purpose combination is:
 --mode full
 ```
 
-## Single file
+## Single file (Best performance - validated)
 
 ```powershell
 points2sbl predict `
-  --input_type auto `
+  --input_type plot `
   --mode full `
-  --config ".\configs\point_transformer.yaml" `
-  --ckpt ".\runs\point_transformer_curated_20260327_170108\best.pt" `
-  --in_las "D:\data\scene.las" `
-  --out_las "D:\data\scene_points2sbl.las" `
+  --config $CFG `
+  --ckpt $CKPT `
+  --in_las "D:\input\forest_plot.las" `
+  --out_las "D:\output\forest_plot_points2sbl_high_quality.las" `
   --device cuda `
+  --votes 10 `
+  --vote_mode hybrid8 `
+  --vote_weight confidence `
+  --geom_cache all `
   --progress tiles
 ```
-
-## Folder
+## Single file (second best yet faster - validated)
 
 ```powershell
 points2sbl predict `
-  --input_type auto `
+  --input_type plot `
   --mode full `
-  --config ".\configs\point_transformer.yaml" `
-  --ckpt ".\runs\point_transformer_curated_20260327_170108\best.pt" `
-  --in_dir "D:\data\forest_clouds" `
-  --out_dir "D:\data\forest_clouds_points2sbl" `
-  --recursive `
-  --skip_existing `
+  --config $CFG `
+  --ckpt $CKPT `
+  --in_las "D:\input\forest_plot.las" `
+  --out_las "D:\output\forest_plot_points2sbl.las" `
   --device cuda `
+  --geom_cache all `
   --progress tiles
 ```
 
+## Folder (Batch processing - multiple input .laz/las files)
+
+```powershell
+points2sbl predict `
+  --input_type plot `
+  --mode full `
+  --config $CFG `
+  --ckpt $CKPT `
+  --in_las "D:\input\forest_plot" `
+  --out_las "D:\output\forest_plot_points2sbl" `
+  --device cuda `
+  --votes 10 `
+  --vote_mode hybrid8 `
+  --vote_weight confidence `
+  --geom_cache all `
+  --progress tiles
+```
 ---
 
 # Understanding `--input_type`
