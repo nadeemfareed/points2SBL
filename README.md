@@ -51,17 +51,18 @@ The recommended production model is the **Point Transformer**. PointNeXt and Poi
 
 # Installation
 
-points2SBL supports both local installation from GitHub and direct installation from PyPI. The recommended workflow is to install the appropriate PyTorch build first and then install points2SBL.
+points2SBL can be installed from **PyPI**, **GitHub**, or used in **Google Colab**.
+
+> **Recommended:** Python 3.11 and a CUDA-enabled PyTorch installation for local GPU inference.
 
 ---
 
-## Option 1: Install from PyPI
+## Option 1 — PyPI
 
-Create and activate a clean environment:
+Create a clean environment:
 
 ```powershell
 conda create -n points2sbl python=3.11 -y
-
 conda activate points2sbl
 ```
 
@@ -81,47 +82,26 @@ Install points2SBL:
 pip install points2sbl
 ```
 
-Verify the installation:
-
-```powershell
-python -c "import points2sbl; print('points2SBL import successful')"
-
-points2sbl --help
-```
-
-Download the pretrained model:
+Download and verify the pretrained model:
 
 ```powershell
 points2sbl model download
-```
-
-Verify that the model is available:
-
-```powershell
 points2sbl model status
 ```
 
 ---
 
-## Option 2: Install from GitHub (validated)
-
-Clone the repository:
+## Option 2 — GitHub
 
 ```powershell
 git clone https://github.com/nadeemfareed/points2SBL.git
-
 cd points2SBL
-```
 
-Create and activate a clean environment:
-
-```powershell
 conda create -n points2sbl python=3.11 -y
-
 conda activate points2sbl
 ```
 
-Install the validated CUDA build of PyTorch:
+Install PyTorch:
 
 ```powershell
 python -m pip install `
@@ -137,171 +117,80 @@ Install points2SBL:
 python -m pip install -e .
 ```
 
-Verify the installation:
-
-```powershell
-python -c "import points2sbl; print('points2SBL import successful')"
-
-points2sbl --help
-```
-
-Download the pretrained model:
+Download and verify the pretrained model:
 
 ```powershell
 points2sbl model download
-```
-
-Verify that the model is available:
-
-```powershell
 points2sbl model status
-```
-
-The pretrained model will be placed in:
-
-```text
-runs/
-└── point_transformer_curated_20260327_170108/
-    └── best.pt
 ```
 
 ---
 
-### Google Colab support (validated)
+## Option 3 — Google Colab
 
-Validated environment:
-
-- Google Colab
-- Python 3.12
-- Linux
-- Tesla T4 GPU
-- PyTorch CUDA
-
-Installation:
-```
+```python
 !pip install points2sbl
-```powershell
-Download model:
-```
 !points2sbl model download
-```powershell
-Inference:
+!points2sbl model status
 ```
-!points2sbl predict \
-    --input_type auto \
-    --mode full \
-    --config points2SBL/configs/point_transformer.yaml \
-    --in_las input.las \
-    --out_las output.las \
-    --device cuda
+
+Enable a GPU runtime in Colab before inference.
+
+---
+
+# Inference
+
+points2SBL accepts `.las` and `.laz` point clouds.
+
+Use:
+
+- `plot` for forest plots or multi-tree scenes.
+- `single_tree` for isolated trees.
+- `full` as the recommended inference mode.
+
+---
+
+## Ground classification for forest plots
+
+> **Important:** For forest plots containing terrain, ground classification should be performed before points2SBL inference. Ground points should use the standard LAS **Classification = 2**.
+
+[FAST-GC](https://github.com/nadeemfareed/FAST-GC) is recommended for ground classification before points2SBL.
+
+FAST-GC can be installed directly with:
+
 ```powershell
-## Quick inference example
+pip install fastgc
+```
+
+For plot-level processing, the recommended order is:
+
+```text
+LAS/LAZ point cloud
+        ↓
+FAST-GC
+Ground = Classification 2
+        ↓
+points2SBL
+        ↓
+Wood = 0 | Leaf = 1 | Ground = 2
+```
+
+See the [FAST-GC repository](https://github.com/nadeemfareed/FAST-GC) for the current recommended TLS ground-classification command and usage.
+
+> FAST-GC preprocessing is not required for isolated individual-tree point clouds that do not contain ground.
+
+---
+
+## Forest plot — recommended
+
+Use this configuration for routine plot processing.
 
 ```powershell
 points2sbl predict `
-  --input_type auto `
+  --input_type plot `
   --mode full `
   --config ".\configs\point_transformer.yaml" `
-  --in_las "input.las" `
-  --out_las "output.las" `
-  --device cuda
-```
-
----
-
-## Verify the installation
-
-```powershell
-python -c "import points2sbl; print('points2SBL import successful')"
-
-points2sbl --help
-
-points2sbl model status
-```
-
----
-
-
-The standard checkpoint location used throughout this README is:
-
-```text
-runs/
-└── point_transformer_curated_20260327_170108/
-    └── best.pt
-```
-
-The checkpoint contains the model configuration used during training. During inference, points2SBL uses the configuration embedded in the checkpoint when available to avoid feature and model mismatches.
-
----
-
-# Validated environment
-
-| Component | Version |
-|---|---:|
-| Operating system | Windows 11 |
-| Python | 3.11 |
-| PyTorch | 2.5.1 |
-| CUDA | 12.1 |
-| NumPy | 2.4.4 |
-| SciPy | 1.17.1 |
-| GPU | NVIDIA GeForce RTX 3070 Ti |
-
----
-
-# Troubleshooting
-
-### Verify installation
-
-```powershell
-points2sbl --help
-
-points2sbl model status
-```
-
-### Download the pretrained model again
-
-```powershell
-points2sbl model download --force
-```
-# Quick start
-
-For most users, these are the only concepts required:
-
-- `--input_type` describes **what kind of point cloud is being processed**.
-- `--mode` describes **how the model prediction is converted into the final wood–leaf result**.
-
-The recommended general-purpose combination is:
-
-```text
---input_type auto
---mode full
-```
-
-## Single file (High quality - validated)
-
-```powershell
-points2sbl predict `
-  --input_type plot `
-  --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\input\forest_plot.las" `
-  --out_las "D:\output\forest_plot_points2sbl_high_quality.las" `
-  --device cuda `
-  --votes 10 `
-  --vote_mode hybrid8 `
-  --vote_weight confidence `
-  --geom_cache all `
-  --progress tiles
-```
-## Single file (Recommend for faster results (2nd highest) - validated)
-
-```powershell
-points2sbl predict `
-  --input_type plot `
-  --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
+  --ckpt ".\runs\point_transformer_curated_20260327_170108\best.pt" `
   --in_las "D:\input\forest_plot.las" `
   --out_las "D:\output\forest_plot_points2sbl.las" `
   --device cuda `
@@ -309,16 +198,20 @@ points2sbl predict `
   --progress tiles
 ```
 
-## Folder (Batch processing - multiple input .laz/las files)
+---
+
+## Forest plot — maximum quality
+
+Use this configuration when prediction quality is preferred over processing time.
 
 ```powershell
 points2sbl predict `
   --input_type plot `
   --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\input\forest_plot" `
-  --out_las "D:\output\forest_plot_points2sbl" `
+  --config ".\configs\point_transformer.yaml" `
+  --ckpt ".\runs\point_transformer_curated_20260327_170108\best.pt" `
+  --in_las "D:\input\forest_plot.las" `
+  --out_las "D:\output\forest_plot_HYBRID8_V10.las" `
   --device cuda `
   --votes 10 `
   --vote_mode hybrid8 `
@@ -326,333 +219,23 @@ points2sbl predict `
   --geom_cache all `
   --progress tiles
 ```
----
 
-# Understanding `--input_type`
-
-`--input_type` controls scene-level assumptions. It does **not** change the trained neural network.
-
-Available values are:
-
-```text
-auto
-plot
-single_tree
-```
-
-## `--input_type plot`
-
-Use `plot` for multi-tree forest scenes where class `2` represents ground.
-
-```powershell
---input_type plot
-```
-
-Plot behavior:
-
-- class `2` ground is preserved;
-- ground is excluded from wood–leaf prediction; ( use fastgc https://github.com/nadeemfareed/FAST-GC to classify ground points before points2sbl deep learning" - fastgc is another package developed by author.
-- the established plot denoising workflow is enabled by default;
-- non-ground points are classified as wood or leaf.
-
-Recommended for:
-
-- TLS forest plots;
-- MLS / BLS / PLS forest plots;
-- ULS plots;
-- multi-tree registered scenes with valid class-2 ground.
-
-## `--input_type single_tree`
-
-Use `single_tree` for isolated trees without ground.
-
-```powershell
---input_type single_tree
-```
-
-Single-tree behavior:
-
-- no ground assumption is imposed;
-- ground exclusion is disabled;
-- plot denoising is disabled;
-- all tree points remain eligible for prediction;
-- automatic tile selection is enabled unless the user explicitly supplies `--tile_size_m`.
-
-This is important for isolated trees because sparse twigs, crown edges, and fine branches can otherwise be removed by a plot-oriented denoising step.
-
-## `--input_type auto`
-
-Use `auto` when the input type is not known in advance.
-
-```powershell
---input_type auto
-```
-
-The current automatic resolver works independently for each input file. Class-2 ground is treated as strong evidence of a plot. For no-ground inputs, scene extent is used to distinguish compact individual trees from larger plot-scale clouds.
-
-Conceptually:
-
-```text
-Input LAS/LAZ
-    │
-    ├── usable class-2 ground present
-    │       └── plot
-    │
-    └── no usable class-2 ground
-            ├── compact XY extent -> single_tree
-            └── large XY extent   -> plot
-```
-
-For benchmark datasets whose `Classification=2` does not actually represent ground, use `--input_type single_tree` or an explicit no-ground configuration rather than `auto`.
+This was the highest-performing configuration in our validation tests.
 
 ---
 
-# Automatic tile selection for individual trees
+## Forest plot — faster multi-vote
 
-If `--input_type single_tree` is selected and `--tile_size_m` is not explicitly supplied, points2SBL chooses the tile size from the maximum XY extent of the tree.
-
-| Maximum XY extent | Automatic tile size |
-|---:|---:|
-| `≤ 8 m` | `1.5 m` |
-| `≤ 15 m` | `2.5 m` |
-| `≤ 25 m` | `3.5 m` |
-| `> 25 m` | `5.0 m` |
-
-A manual value always takes precedence:
-
-```powershell
---tile_size_m 4.0
-```
-
-The automatic system avoids applying one fixed spatial scale to trees with very different crown dimensions.
-
----
-
-# Understanding `--mode`
-
-`--mode` controls the inference decision/refinement strategy.
-
-Available modes are:
-
-```text
-full
-raw
-adaptive
-```
-
-The same trained checkpoint can be used with all three modes.
-
-## `--mode full`
-
-`full` is the default production workflow.
-
-```powershell
---mode full
-```
-
-It uses the established points2SBL inference pipeline, including:
-
-- block-wise multi-vote inference;
-- confidence-aware vote weighting;
-- spatial vote weighting;
-- dual-threshold wood/leaf decisions;
-- local geometry support;
-- smoothing;
-- woody refinement;
-- woody-structure refinement;
-- small-component cleanup;
-- uncertain-point reassignment.
-
-Use `full` for routine processing and final production outputs.
-
-## `--mode raw`
-
-`raw` exposes the direct neural-network decision with minimal semantic post-processing.
-
-```powershell
---mode raw
-```
-
-It disables optional semantic refinement such as:
-
-- spatial refinement;
-- smoothing;
-- woody refinement;
-- woody-structure refinement;
-- small woody-component cleanup;
-- uncertain-point reassignment.
-
-Use `raw` for:
-
-- model benchmarking;
-- ablation studies;
-- debugging;
-- comparing direct network behavior against refined predictions.
-
-## `--mode adaptive`
-
-`adaptive` derives wood and leaf anchors from the empirical prediction-probability distribution for the current scene and resolves primarily the transition region using geometry/local support.
-
-```powershell
---mode adaptive
-```
-
-It is useful when probability distributions shift between acquisitions, species, phenological conditions, or forest structures.
-
-Adaptive mode preserves high-confidence wood and leaf regions while concentrating additional decision logic in the ambiguous transition zone.
-
-Use it for:
-
-- structurally complex forests;
-- difficult benchmark datasets;
-- scenes with a pronounced bimodal wood/leaf probability distribution;
-- controlled comparison against `raw` and `full`.
-
----
-
-# Recommended mode/type combinations
-
-| Data | Recommended input type | Recommended mode |
-|---|---|---|
-| Standard TLS forest plot with class-2 ground | `plot` | `full` |
-| MLS / BLS / PLS forest plot | `plot` or `auto` | `full` |
-| ULS plot | `plot` or `auto` | `full` |
-| Isolated TLS tree | `single_tree` | `full` |
-| Folder of isolated trees | `single_tree` | `full` |
-| Unknown mixed collection | `auto` | `full` |
-| Direct network benchmark | appropriate scene type | `raw` |
-| Scene-adaptive probability experiment | appropriate scene type or `auto` | `adaptive` |
-
----
-
-# Single-file inference examples
-
-The following examples assume execution from the repository root.
-
-Set convenient variables in PowerShell:
-
-```powershell
-$CFG  = ".\configs\point_transformer.yaml"
-$CKPT = ".\runs\point_transformer_curated_20260327_170108\best.pt"
-```
-
-## Example 1 — Standard plot, full production mode
+For large datasets, four deterministic votes provide a useful quality/runtime compromise.
 
 ```powershell
 points2sbl predict `
   --input_type plot `
   --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\inference\TLS\plot01.las" `
-  --out_las "D:\inference\TLS_pred\plot01_FULL.las" `
-  --device cuda `
-  --progress tiles
-```
-
-Use this when class `2` represents ground. Ground points are retained in the output and excluded from wood–leaf prediction.
-## fastgc - https://github.com/nadeemfareed/FAST-GC
-The best practice is to process the point clouds for ground classification using fastgc and then use the points2sbl with ground class available to reduce the processing time and accuracy (ground points do not belong to wood and foliage)
-
-pip install fastgc
-
-### Install from source
-git clone https://github.com/nadeemfareed/FAST-GC.git
-cd FAST-GC
-pip install -e .
-
-## Example 2 — Plot, raw model output
-
-```powershell
-points2sbl predict `
-  --input_type plot `
-  --mode raw `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\inference\TLS\plot01.las" `
-  --out_las "D:\inference\TLS_pred\plot01_RAW.las" `
-  --device cuda `
-  --progress tiles
-```
-
-This is useful for evaluating the direct Point Transformer decision before the full semantic refinement pipeline.
-
-## Example 3 — Plot, adaptive mode
-
-```powershell
-points2sbl predict `
-  --input_type plot `
-  --mode adaptive `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\inference\TLS\plot01.las" `
-  --out_las "D:\inference\TLS_pred\plot01_ADAPTIVE.las" `
-  --device cuda `
-  --geom_cache all `
-  --progress tiles
-```
-
-Adaptive mode derives scene-specific probability anchors and concentrates geometry/local support in the transition zone.
-
-## Example 4 — Individual tree, automatic tile size
-
-```powershell
-points2sbl predict `
-  --input_type single_tree `
-  --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\single_trees\tree_001.las" `
-  --out_las "D:\single_trees_pred\tree_001_FULL.las" `
-  --device cuda `
-  --progress tiles
-```
-
-No `--tile_size_m` is necessary. The individual-tree workflow automatically selects a tile size from the tree's XY extent.
-
-## Example 5 — Individual tree with explicit tile-size override
-
-```powershell
-points2sbl predict `
-  --input_type single_tree `
-  --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\single_trees\tree_001.las" `
-  --out_las "D:\single_trees_pred\tree_001_4m.las" `
-  --device cuda `
-  --tile_size_m 4.0 `
-  --progress tiles
-```
-
-Explicit user settings override automatic tile selection.
-
-## Example 6 — Automatic scene-type detection
-
-```powershell
-points2sbl predict `
-  --input_type auto `
-  --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\mixed_inputs\scene.las" `
-  --out_las "D:\mixed_outputs\scene_FULL.las" `
-  --device cuda `
-  --progress tiles
-```
-
-Use this for general-purpose inference when the input may be either a plot or an individual tree.
-
-## Example 7 — Four deterministic grid votes
-
-```powershell
-points2sbl predict `
-  --input_type auto `
-  --mode adaptive `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\inference\scene.las" `
-  --out_las "D:\inference\scene_ADAPTIVE_4VOTES.las" `
+  --config ".\configs\point_transformer.yaml" `
+  --ckpt ".\runs\point_transformer_curated_20260327_170108\best.pt" `
+  --in_las "D:\input\forest_plot.las" `
+  --out_las "D:\output\forest_plot_GRID4_V4.las" `
   --device cuda `
   --votes 4 `
   --vote_mode grid4 `
@@ -661,218 +244,127 @@ points2sbl predict `
   --progress tiles
 ```
 
-Use this configuration when a fast deterministic four-layout comparison is desired.
+---
 
-## Example 8 — Eight-vote hybrid adaptive inference
+## Individual tree
 
-```powershell
-points2sbl predict `
-  --input_type auto `
-  --mode adaptive `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\inference\scene.las" `
-  --out_las "D:\inference\scene_ADAPTIVE_HYBRID8.las" `
-  --device cuda `
-  --votes 8 `
-  --vote_mode hybrid8 `
-  --vote_weight confidence `
-  --geom_cache all `
-  --progress tiles
-```
-
-`hybrid8` combines structured and additional layouts to increase spatial coverage while confidence weighting reduces the influence of weak predictions.
-
-## Example 9 — Advanced adaptive controls
-
-Most users should not need these options. They are retained for controlled experiments and expert tuning.
+Use `single_tree` for isolated trees. Tile size is selected automatically.
 
 ```powershell
 points2sbl predict `
-  --input_type auto `
-  --mode adaptive `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_las "D:\inference\scene.las" `
-  --out_las "D:\inference\scene_ADAPTIVE_ADVANCED.las" `
+  --input_type single_tree `
+  --mode full `
+  --config ".\configs\point_transformer.yaml" `
+  --ckpt ".\runs\point_transformer_curated_20260327_170108\best.pt" `
+  --in_las "D:\input\tree_001.las" `
+  --out_las "D:\output\tree_001_points2sbl.las" `
   --device cuda `
-  --votes 8 `
-  --vote_mode hybrid8 `
-  --vote_weight confidence `
   --geom_cache all `
-  --adaptive_hist_bins 256 `
-  --adaptive_hist_smooth_sigma 2.0 `
-  --adaptive_shoulder_fraction 0.02 `
-  --adaptive_min_transition_width 0.10 `
-  --adaptive_geom_ratio 0.85 `
-  --adaptive_local_support_min 0.55 `
   --progress tiles
 ```
 
 ---
 
-# Batch inference
+# Batch processing
 
-Folder mode supports LAS and LAZ inputs. With `--recursive`, the input directory structure is reproduced under the output directory.
+## Forest plots
 
-`--skip_existing` is useful for resumable processing.
-
-## Example 10 — Folder of forest plots
+For plot datasets containing terrain, perform ground classification with FAST-GC before running the batch.
 
 ```powershell
 points2sbl predict `
   --input_type plot `
   --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_dir "D:\inference\TLS_plots" `
-  --out_dir "D:\inference\TLS_plots_points2sbl" `
+  --config ".\configs\point_transformer.yaml" `
+  --ckpt ".\runs\point_transformer_curated_20260327_170108\best.pt" `
+  --in_dir "D:\input\forest_plots" `
+  --out_dir "D:\output\forest_plots_points2sbl" `
   --recursive `
   --skip_existing `
   --device cuda `
+  --geom_cache all `
   --progress tiles
 ```
 
-## Example 11 — Folder of individual trees
+## Individual trees
 
 ```powershell
 points2sbl predict `
   --input_type single_tree `
   --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_dir "D:\single_trees" `
-  --out_dir "D:\single_trees_points2sbl" `
+  --config ".\configs\point_transformer.yaml" `
+  --ckpt ".\runs\point_transformer_curated_20260327_170108\best.pt" `
+  --in_dir "D:\input\single_trees" `
+  --out_dir "D:\output\single_trees_points2sbl" `
   --recursive `
   --skip_existing `
   --device cuda `
+  --geom_cache all `
   --progress tiles
-```
-
-Each tree independently receives the appropriate automatic tile size unless `--tile_size_m` is explicitly supplied.
-
-## Example 12 — Mixed folder with automatic scene detection
-
-```powershell
-points2sbl predict `
-  --input_type auto `
-  --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_dir "D:\mixed_forest_clouds" `
-  --out_dir "D:\mixed_forest_clouds_points2sbl" `
-  --recursive `
-  --skip_existing `
-  --device cuda `
-  --progress tiles
-```
-
-Each file is resolved independently as a plot or single tree.
-
-## Example 13 — First 10 files only
-
-A limited batch is useful when validating a new dataset.
-
-```powershell
-points2sbl predict `
-  --input_type single_tree `
-  --mode full `
-  --config $CFG `
-  --ckpt $CKPT `
-  --in_dir "D:\single_trees" `
-  --out_dir "D:\single_trees_test10" `
-  --recursive `
-  --max_files 10 `
-  --device cuda `
-  --progress tiles
-```
-
-After validating the first files, remove `--max_files 10` to process the complete folder.
-
----
-
-# Processing workflow
-
-<p align="center">
-<img src="docs/images/points2sbl_implimentation.png" width="96%" alt="points2SBL implementation">
-</p>
-
-The overall software workflow is:
-
-```text
-LAS/LAZ input
-    │
-    ▼
-Input-type resolution
-(plot / single_tree / auto)
-    │
-    ▼
-Geometric feature construction
-    │
-    ▼
-Point Transformer / PointNeXt / PointNet++ inference
-    │
-    ▼
-Multi-layout probability aggregation
-    │
-    ▼
-full / raw / adaptive decision workflow
-    │
-    ▼
-LAS/LAZ prediction + probability + JSON sidecar
-```
-
-For retraining, the complete path is:
-
-```text
-Labeled LAS/LAZ
-    │
-    ▼
-Data preparation and geometric feature extraction
-    │
-    ▼
-Point Transformer / PointNeXt / PointNet++ training
-    │
-    ▼
-Pretrained checkpoint
-    │
-    ▼
-Inference workflow above
-```
-
-The default Point Transformer input uses seven channels:
-
-```text
-centered X, centered Y, centered Z,
-linearity, planarity, scattering, curvature
 ```
 
 ---
 
-# Input labels and prediction semantics
+# Output classes
 
-## Class convention
-
-| Classification | Meaning |
+| Classification | Class |
 |---:|---|
-| `0` | Woody structure |
-| `1` | Leaf or needle |
+| `0` | Wood |
+| `1` | Leaf / needle |
 | `2` | Ground, when present |
 
-Woody structure can include stems, branches, snags, and coarse woody material when those components are part of the annotation protocol.
+The output point cloud also contains prediction information including `pred_class` and `pred_leaf_prob`.
 
-## Plot input
+---
 
-For `--input_type plot`, class `2` is interpreted as ground and is preserved.
+# Troubleshooting
 
-## Individual-tree input
+## Check installation
 
-For `--input_type single_tree`, no ground class is required.
+```powershell
+points2sbl --help
+points2sbl model status
+```
 
-## Benchmark/reference data
+## CUDA is unavailable
 
-If the input contains manually curated reference labels that must be retained for quantitative evaluation, preserve them in a separate LAS extra-byte field or use a copied input before overwriting `Classification`.
+Check the installed PyTorch build:
 
+```powershell
+python -c "import torch; print(torch.__version__); print(torch.version.cuda); print(torch.cuda.is_available())"
+```
+
+If `torch.cuda.is_available()` returns `False`, install a CUDA-enabled PyTorch build.
+
+## Download the model again
+
+```powershell
+points2sbl model download --force
+```
+
+## GPU out of memory
+
+Reduce the inference batch size:
+
+```powershell
+--batch_blocks 8
+```
+
+If necessary:
+
+```powershell
+--batch_blocks 4
+```
+
+---
+
+# Help
+
+View all available command-line options with:
+
+```powershell
+points2sbl predict --help
+```
 ---
 
 # Output
@@ -886,17 +378,7 @@ The output LAS/LAZ preserves the original point geometry and supported LAS attri
 | `pred_leaf_prob` | Aggregated probability of the leaf class |
 | JSON sidecar | Resolved settings and inference diagnostics |
 
-Output class convention:
 
-| Code | Meaning |
-|---:|---|
-| `0` | Wood |
-| `1` | Leaf |
-| `2` | Preserved ground when present and excluded from binary prediction |
-
-The inference sidecar records the resolved configuration, tile size, vote strategy, geometry-cache settings, ground handling, denoising state, and refinement statistics.
-
----
 
 # Advanced inference controls
 
