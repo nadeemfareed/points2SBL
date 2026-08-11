@@ -277,7 +277,7 @@ The recommended general-purpose combination is:
 --mode full
 ```
 
-## Single file (Best performance - validated)
+## Single file (High quality - validated)
 
 ```powershell
 points2sbl predict `
@@ -294,7 +294,7 @@ points2sbl predict `
   --geom_cache all `
   --progress tiles
 ```
-## Single file (second best yet faster - validated)
+## Single file (Recommend for faster results (2nd highest) - validated)
 
 ```powershell
 points2sbl predict `
