@@ -489,28 +489,7 @@ The following workaround may allow execution but is not recommended for producti
 
 ```powershell
 $env:KMP_DUPLICATE_LIB_OK = "TRUE"
-```
-
-## Ground is predicted as wood or leaf
-
-Use:
-
-```powershell
---input_type plot
-```
-
-and confirm that true ground is stored as class `2`.
-
-## Fine tree structure is removed
-
-For isolated trees use:
-
-```powershell
---input_type single_tree
-```
-
-This disables plot denoising and ground exclusion by default.
-
+```.
 ## Automatic input detection is inappropriate
 
 Override it explicitly:
