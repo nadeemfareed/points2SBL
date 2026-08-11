@@ -11,12 +11,23 @@ from typing import Optional
 from tqdm import tqdm
 
 
-MODEL_FILENAME = "point_transformer_best.pt"
+# ------------------------------------------------------------------
+# Released model metadata
+# ------------------------------------------------------------------
+
+# Filename of the asset stored in the GitHub Release.
+MODEL_ASSET_FILENAME = "point_transformer_best.pt"
+
+# Filename used locally after installation.
+MODEL_LOCAL_FILENAME = "best.pt"
+
+# The pretrained model currently remains associated with release v0.3.0.
+# This does not need to match the Python package version.
 MODEL_VERSION = "0.3.0"
 
 MODEL_URL = (
     "https://github.com/nadeemfareed/points2sbl/releases/download/"
-    f"v{MODEL_VERSION}/{MODEL_FILENAME}"
+    f"v{MODEL_VERSION}/{MODEL_ASSET_FILENAME}"
 )
 
 MODEL_SHA256 = (
@@ -25,6 +36,10 @@ MODEL_SHA256 = (
 
 MODEL_BYTES = 18383398
 
+
+# ------------------------------------------------------------------
+# Paths
+# ------------------------------------------------------------------
 
 def repo_root() -> Path:
     cwd = Path.cwd()
@@ -45,8 +60,12 @@ def model_cache_dir() -> Path:
 
 
 def default_model_path() -> Path:
-    return model_cache_dir() / "best.pt"
+    return model_cache_dir() / MODEL_LOCAL_FILENAME
 
+
+# ------------------------------------------------------------------
+# Integrity
+# ------------------------------------------------------------------
 
 def sha256_file(
     path: Path,
@@ -65,6 +84,10 @@ def sha256_file(
 
     return h.hexdigest()
 
+
+# ------------------------------------------------------------------
+# Status
+# ------------------------------------------------------------------
 
 def model_status() -> tuple[bool, str]:
     path = default_model_path()
@@ -86,12 +109,15 @@ def model_status() -> tuple[bool, str]:
     return True, f"Model ready: {path}"
 
 
+# ------------------------------------------------------------------
+# Download
+# ------------------------------------------------------------------
+
 def download_default_model(
     *,
     force: bool = False,
     url: Optional[str] = None,
 ) -> Path:
-
     target = default_model_path()
 
     target.parent.mkdir(
@@ -140,7 +166,6 @@ def download_default_model(
 
     try:
         with urllib.request.urlopen(req) as response, temp.open("wb") as out:
-
             total = response.headers.get("Content-Length")
 
             total_n = (
@@ -156,7 +181,6 @@ def download_default_model(
                 unit_divisor=1024,
                 desc="model",
             ) as bar:
-
                 while True:
                     chunk = response.read(1024 * 1024)
 
