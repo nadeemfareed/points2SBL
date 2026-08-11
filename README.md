@@ -18,6 +18,7 @@
 </p>
 
 **points2SBL** is an open-source framework for binary semantic segmentation of forest LiDAR point clouds into **woody** and **foliar** components. The current release is designed to make pretrained-model inference straightforward for plot-scale and individual-tree point clouds while retaining the complete data-preparation and training workflow for advanced users.
+# The research behind points2SBL is now available as a preprint, providing the scientific basis for our deep-learning approach to wood–foliar semantics of forest LiDAR point clouds https://www.preprints.org/manuscript/202608.0737
 
 The recommended production model is the **Point Transformer**. PointNeXt and PointNet++ remain available for comparison, ablation, and alternative deployment requirements.
 
