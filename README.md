@@ -28,20 +28,15 @@ The recommended production model is the **Point Transformer**. PointNeXt and Poi
 
 | Capability | Support |
 |---|:---:|
-| Binary wood–leaf segmentation | ✅ |
+| Wood–leaf segmentation | ✅ |
 | Point Transformer | ✅ Recommended |
-| PointNeXt | ✅ |
-| PointNet++ | ✅ |
 | TLS plots | ✅ |
-| Individual trees | ✅ |
 | MLS / BLS / PLS | ✅ |
 | ULS | ✅ |
 | CPU and CUDA execution | ✅ |
 | Single-file inference | ✅ |
 | Recursive folder inference | ✅ |
 | Automatic plot/tree detection | ✅ |
-| Automatic single-tree tile selection | ✅ |
-| `full`, `raw`, and `adaptive` inference modes | ✅ |
 | Multi-vote probability aggregation | ✅ |
 | Spatial confidence weighting | ✅ |
 | Woody-structure refinement | ✅ |
@@ -53,6 +48,8 @@ The recommended production model is the **Point Transformer**. PointNeXt and Poi
 # Installation
 
 points2SBL can be installed from **PyPI**, **GitHub**, or used in **Google Colab**.
+
+USE: https://www.anaconda.com/download
 
 > **Recommended:** Python 3.11 and a CUDA-enabled PyTorch installation for local GPU inference.
 
