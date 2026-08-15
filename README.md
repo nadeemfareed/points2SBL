@@ -57,7 +57,7 @@ USE: https://www.anaconda.com/download
 
 ## Option 1 — PyPI
 
-Create a clean environment:
+Create an environment:
 
 ```powershell
 conda create -n points2sbl python=3.11 -y
